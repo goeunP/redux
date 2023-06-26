@@ -15,26 +15,48 @@
 // // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals();
 
+import { createStore } from "redux";
+
 const add = document.getElementById("add");
 const minus = document.getElementById("minus");
 const num = document.querySelector("span");
 
-let count = 0;
+//reducer는 data(state) 변경하고 관리하는 function    ex) +- 관리
+//reducer 이름이 countModifier
+//redux에서는 data modifier가 한 reducer함수에서만 일어나야함
+//return하는 값이 application의 state가 됨
 
-const updateText = () => {
-  num.innerText = count;
+const countModifier = (count = 0, action) => {
+  //state 변경 부분
+  console.log(action, count);
+  //   if (action.type === "ADD") {
+  //     return count + 1;
+  //   } else if (action.type === "MINUS") {
+  //     return count - 1;
+  //   } else {
+  //     return count;
+  //   }
+  switch (action.type) {
+    case "ADD":
+      return count + 1;
+    case "MINUS":
+      return count - 1;
+    default:
+      return count;
+  }
 };
 
-const handleAdd = () => {
-  count += 1;
-  updateText();
+//createStore로 data 저장소 만들기 -> data 변경시키는 함수 넣어주기
+const countStore = createStore(countModifier);
+
+//subscribe : store 내부에 들어있는 data 변화 감지 -> 구독해서 변화 감지 하는 방식
+const onChange = () => {
+  num.innerText = countStore.getState();
 };
+countStore.subscribe(onChange);
 
-const handleMinus = () => {
-  count -= 1;
-  updateText();
-};
+//store.dispatch(action)하면 redux가 countModifier 불러서 action 전달
+add.addEventListener("click", () => countStore.dispatch({ type: "ADD" }));
+minus.addEventListener("click", () => countStore.dispatch({ type: "MINUS" }));
 
-add.addEventListener("click", handleAdd);
-
-minus.addEventListener("click", handleMinus);
+console.log(countStore.getState());
