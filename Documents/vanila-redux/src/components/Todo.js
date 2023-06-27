@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deleteTodo } from "../store";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
